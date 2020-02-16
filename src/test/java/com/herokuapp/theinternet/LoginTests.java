@@ -5,8 +5,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
+
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class LoginTests {
     private WebDriver webDriver;
@@ -16,6 +22,12 @@ public class LoginTests {
     private void setUp(@Optional("webdriver.chrome.driver") String browser) {
         System.setProperty(browser, browser.equals("webdriver.chrome.driver") ? "src/main/resources/chromedriver" : "src/main/resources/geckodriver" );
         webDriver = browser.equals("webdriver.chrome.driver") ? new ChromeDriver() : new FirefoxDriver();
+
+        webDriver.manage().window().maximize();
+
+//        webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+
     }
 
     @AfterMethod(alwaysRun = true)
@@ -39,7 +51,10 @@ public class LoginTests {
         WebElement passwordElement = webDriver.findElement(By.xpath("/html//input[@id='password']"));
         passwordElement.sendKeys("SuperSecretPassword!");
 
+        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+
         WebElement loginButton = webDriver.findElement(By.xpath("//form[@id='login']//i[@class='fa fa-2x fa-sign-in']"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
         loginButton.click();
 
         //unsuccessful login message
@@ -47,6 +62,11 @@ public class LoginTests {
         String expectedMessage = "You logged into a secure area!";
         String actualMessage = invalidUsernameMessage.getText();
         Assert.assertTrue(actualMessage.contains(expectedMessage), "Actual message is not expected message");
+
+
+        WebElement logoutButtonElement = webDriver.findElement(By.xpath("//div[@id='content']//a[@href='/logout']/i[@class='icon-2x icon-signout']"));
+        logoutButtonElement.click();
+
 
     }
 

@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="ExceptionsSuite" verbose="1" >
+
+    <test name="NotVisibleTest" >
+        <parameter name="browser" value="webdriver.chrome.driver"/>
+        <classes>
+            <class name="com.herokuapp.theinternet.ExceptionsTests" >
+                <methods>
+<!--                    <include name="notVisibleTest"/>-->
+<!--                    <include name="timeoutTest"/>-->
+<!--                    <include name="noSuchElementTest"/>-->
+                    <include name="staleElementTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
